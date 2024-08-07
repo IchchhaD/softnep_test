@@ -29,8 +29,8 @@ class LoginController extends Controller
         }
 
         $credentials = [
-            'email' => $request['email'],
-            'password' => $request['password'],
+            'email' => $request->email,
+            'password' => $request->password,
         ];
 
         if(!auth()->attempt($credentials))
@@ -38,9 +38,9 @@ class LoginController extends Controller
             return response(['error'=>true,'message' => 'Invalid username or password']);
         }
 
-        $user = User::where('email', $email)->get();
+        $user = User::where('email', $request->email)->get();
 
-        $accessToken = auth()->user()->createToken('authToken')->accessToken;
+        $token = rand(100000000000000,999999999999999);
 
         $user = auth()->user();
 
@@ -49,7 +49,7 @@ class LoginController extends Controller
             'error' => false,
             'id' => $user->id,
             'email' => $user->email,
-            'access_token' => $accessToken,
+            'access_token' => $token,
             'isLoggedIn' => true,
             'token_type' => 'Bearer',
         ]);

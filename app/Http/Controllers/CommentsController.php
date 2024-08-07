@@ -14,9 +14,9 @@ class CommentsController extends Controller
         $comments = Comment::where('id', $id)->get();
         if(!empty($comments))
         {
-            return response->json(['error' => false, 'message' => 'Getting Comments for the post', 'comments' => $comments]);
+            return response()->json(['error' => false, 'message' => 'Getting Comments for the post', 'comments' => $comments]);
         }
-        return response->json(['error' => true, 'message' => 'No Comments to Show']);
+        return response()->json(['error' => true, 'message' => 'No Comments to Show']);
     }
     public function createComments(Request $request)
     {
@@ -31,25 +31,25 @@ class CommentsController extends Controller
             $comment->created_by = Auth::user()->email;
             if($comment->save())
             {
-                return response->json(['error' => false, 'message' => 'Comment Created', 'posts' => $comment]);
+                return response()->json(['error' => false, 'message' => 'Comment Created', 'posts' => $comment]);
             }
-            return response->json(['error' => true, 'message' => 'Comented Not Created']);
+            return response()->json(['error' => true, 'message' => 'Comented Not Created']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
     public function updateComments(Request $request, $id, $post_id)
     {
-        $checkId = \Validator::make($request->all(), [
+        $checkDetails = \Validator::make($request->all(), [
             'content' => 'required',
         ]);
 
         if ($checkId->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $checkDetails->errors();
     
             return response()->json($error);
         }
@@ -61,25 +61,25 @@ class CommentsController extends Controller
             $comment->created_by = Auth::user()->email;
             if($comment->save())
             {
-                return response->json(['error' => false, 'message' => 'Posts Updated', 'posts' => $comment]);
+                return response()->json(['error' => false, 'message' => 'Posts Updated', 'posts' => $comment]);
             }
-            return response->json(['error' => true, 'message' => 'Posts Not Updated']);
+            return response()->json(['error' => true, 'message' => 'Posts Not Updated']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
     public function deleteComments(Request $request)
     {
-        $checkId = \Validator::make($request->all(), [
+        $checkDetails = \Validator::make($request->all(), [
             'id' => 'required',
         ]);
 
-        if ($checkId->fails())
+        if ($checkDetails->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $checkDetails->errors();
     
             return response()->json($error);
         }
@@ -88,13 +88,13 @@ class CommentsController extends Controller
             $post = Post::findOrFail($id);
             if($post->delete())
             {
-                return response->json(['error' => false, 'message' => 'Posts Deleted', 'posts' => $posts]);
+                return response()->json(['error' => false, 'message' => 'Posts Deleted', 'posts' => $posts]);
             }
-            return response->json(['error' => true, 'message' => 'Posts Not Updated']);
+            return response()->json(['error' => true, 'message' => 'Posts Not Updated']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
 }

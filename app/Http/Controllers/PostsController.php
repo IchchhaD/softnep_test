@@ -20,9 +20,9 @@ class PostsController extends Controller
         $posts = Post::get();
         if(!empty($posts))
         {
-            return response->json(['error' => false, 'message' => 'Getting Posts', 'posts' => $posts]);
+            return response()->json(['error' => false, 'message' => 'Getting Posts', 'posts' => $posts]);
         }
-        return response->json(['error' => true, 'message' => 'No Posts to Show']);
+        return response()->json(['error' => true, 'message' => 'No Posts to Show']);
     }
     public function createPosts(Request $request)
     {
@@ -34,7 +34,7 @@ class PostsController extends Controller
         if ($checkDetails->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $checkDetails->errors();
     
             return response()->json($error);
         }
@@ -46,13 +46,13 @@ class PostsController extends Controller
             $post->created_by = Auth::user()->email;
             if($post->save())
             {
-                return response->json(['error' => false, 'message' => 'Posts Created', 'posts' => $posts]);
+                return response()->json(['error' => false, 'message' => 'Posts Created', 'posts' => $posts]);
             }
-            return response->json(['error' => true, 'message' => 'Posts Not Created']);
+            return response()->json(['error' => true, 'message' => 'Posts Not Created']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
     public function updatePosts(Request $request, $id)
@@ -65,7 +65,7 @@ class PostsController extends Controller
         if ($checkDetails->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $checkDetails->errors();
     
             return response()->json($error);
         }
@@ -77,25 +77,25 @@ class PostsController extends Controller
             $post->created_by = Auth::user()->email;
             if($post->save())
             {
-                return response->json(['error' => false, 'message' => 'Posts Updated', 'posts' => $posts]);
+                return response()->json(['error' => false, 'message' => 'Posts Updated', 'posts' => $posts]);
             }
-            return response->json(['error' => true, 'message' => 'Posts Not Updated']);
+            return response()->json(['error' => true, 'message' => 'Posts Not Updated']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
     public function deletePosts(Request $request)
     {
-        $checkId = \Validator::make($request->all(), [
+        $checkDetails = \Validator::make($request->all(), [
             'id' => 'required',
         ]);
 
-        if ($checkId->fails())
+        if ($checkDetails->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $checkDetails->errors();
     
             return response()->json($error);
         }
@@ -104,13 +104,13 @@ class PostsController extends Controller
             $post = Post::findOrFail($id);
             if($post->delete())
             {
-                return response->json(['error' => false, 'message' => 'Posts Deleted', 'posts' => $posts]);
+                return response()->json(['error' => false, 'message' => 'Posts Deleted', 'posts' => $posts]);
             }
-            return response->json(['error' => true, 'message' => 'Posts Not Updated']);
+            return response()->json(['error' => true, 'message' => 'Posts Not Updated']);
         }
         catch(Exception $e)
         {
-            return response->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
+            return response()->json(['error'=>true, 'message' => 'Something went wrong', 'error_data' => $e->errors()]);
         }
     }
 }

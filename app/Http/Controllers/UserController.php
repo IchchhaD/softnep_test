@@ -8,7 +8,7 @@ use Hash;
 
 use Illuminate\Support\Facades\Validator;
 
-use App\Model\User;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -23,20 +23,26 @@ class UserController extends Controller
         if ($register->fails())
         {
             $error['error'] = true; 
-            $error['message'] = $login->errors();
+            $error['message'] = $register->errors();
     
             return response()->json($error);
         }
-
-        $password = Hash::$request->password;
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = $password;
-        if($user->save())
+        try
         {
-            return response(['error'=>false,'message' => 'User Created']);
+            $password = Hash::make($request->password);
+            $user = new User;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = $password;
+            if($user->save())
+            {
+                return response(['error'=>false,'message' => 'User Created', 'user', $user]);
+            }
+            return response(['error'=>true, 'message' => 'User not created']);
         }
-        return response(['error'=>true, 'message' => 'User not created']);
+        catch(Exception $e)
+        {
+            return response(['error'=>true, 'message' => 'User not created']);
+        }
     }
 }
